@@ -1,3 +1,9 @@
+# target directory containing maven build files
+target/
+
+# directory specific to netBeans project
+nbproject/
+
 *.class
 
 # BlueJ files
