@@ -2,7 +2,7 @@ package com.easy.argparse;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Objects;
+//import java.util.Objects;
 
 final class UsageToken {
 
@@ -71,9 +71,9 @@ final class UsageToken {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.optionName);
-        hash = 59 * hash + Objects.hashCode(this.optionAliasName);
-        hash = 59 * hash + Objects.hashCode(this.dataVariableName);
+        hash = 59 * hash + (optionName != null ? optionName.hashCode() : 0);
+        hash = 59 * hash + (optionAliasName != null ? optionAliasName.hashCode() : 0);
+        hash = 59 * hash + (dataVariableName != null ? dataVariableName.hashCode() : 0);
         return hash;
     }
 

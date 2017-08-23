@@ -103,7 +103,7 @@ final class FieldValueManager {
 
         for (int index = 0; index < vals.length; index++) {
             try {
-                Array.set(arr, index, getNonArrayArgValue(vals[index], arrayComponentFieldType));
+                Array.set(arr, index, getNonArrayArgValue(vals[index].trim(), arrayComponentFieldType));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Incorrect data format (" + e.getMessage() + ")");
             }

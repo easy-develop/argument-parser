@@ -17,16 +17,16 @@ final class UsageTokenManager {
     private static List<UsageToken> getUsageTokens(String usageExpression) {
         // example: --day|-d DAY -time | -t TIME -f FILE
         logger.trace("Parsing ({}) for usage tokens", usageExpression);
-        String regex = "[-]{1,2}(?<opt>[a-zA-Z0-9_]+)([ ]?\\|[ ]?[-]{1,2}(?<optAlias>[a-zA-Z0-9_]+))? (?<variable>[a-zA-Z$_][a-zA-Z$_0-9]*)";
+        String regex = "[-]{1,2}([a-zA-Z0-9_]+)([ ]?\\|[ ]?[-]{1,2}([a-zA-Z0-9_]+))? ([a-zA-Z$_][a-zA-Z$_0-9]*)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(usageExpression);
 
         List<UsageToken> usageTokens = new ArrayList<UsageToken>();
 
         while (matcher.find()) {
-            String optionName = matcher.group("opt");
-            String optionAliasName = matcher.group("optAlias");
-            String dataVariableName = matcher.group("variable");
+            String optionName = matcher.group(1);
+            String optionAliasName = matcher.group(3);
+            String dataVariableName = matcher.group(4);
             usageTokens.add(new UsageToken(optionName, optionAliasName, dataVariableName));
             logger.trace("Found usage token: option = {}, alias = {}, variable name = {}", optionName, optionAliasName, dataVariableName);
         }
