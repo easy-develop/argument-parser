@@ -60,14 +60,40 @@ import com.easy.argparse.ArgumentParser;
 
 public class Main {
 	public static void main(String[] args) {
-		String inputUsage = "--day|-d day --mon|-m month [--year|-y year] [--dir|-ds directoriesToSearch]";
-		ArgumentParser argParser = new ArgumentParser(inputUsage, InputData.class);
+		String usage = "--day|-d day --mon|-m month [--year|-y year][--dir|-ds directoriesToSearch]";
+		ArgumentParser argParser = new ArgumentParser(usage, InputData.class);
 		InputData inputData = (InputData) argParser.parse(args);
+		showData(inputData);
 		
 		new StatsGenerator().generateStats(inputData);
+	}
+	
+	private static void showData(InputData inputData) {
+		System.out.println("Day = " + inputData.getDay() + ", month = " +
+				inputData.getMonth() + ", year = " + inputData.getYear());
+		
+		String[] directoriesToSearch = inputData.getDirectoriesToSearch();
+		if(directoriesToSearch == null) {
+			System.out.println("no array obtained");
+		}
+		if(directoriesToSearch != null && directoriesToSearch.length > 0) {
+			System.out.println("Target directories are >>>");
+			for(String dir : directoriesToSearch){
+				System.out.println(dir);
+			}
+		}
 	}
 }
 ```
 That's all we need to do, just specify the input pattern and data class, and get a new instance of data class with fields updated as per values available in the array of strings. To use this library, add the JAR file available in [Releases](https://github.com/shekhar-himanshu/argument-parser-easy/releases) section to your classpath.
 
-Refer to javadoc for details on the API.
+Here is the output of a sample run using this library:
+
+    bash $ java com.demo.argParse.Main -d 20 -m 8 -ds "dir-A, dir-B" -y 2017
+    Day = 20, month = 8, year = 2017
+    Target directories are >>>
+    dir-A
+    dir-B
+    bash $
+
+Refer to javadoc in [Releases](https://github.com/shekhar-himanshu/argument-parser-easy/releases) section for details on the API.
