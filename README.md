@@ -1,7 +1,14 @@
 # argument-parser-easy
-This is simple and lightweight project for parsing an array of strings into specified class. For example, let's say we want to parse the command line arguments entered by end user and store the relevant values into a class, so that we can retrieve the values from the class and use them the way we need. This task is usually done by directly reading the arguments and storing different values based on indices, which makes it a little bit cumbersome and fragile if the input pattern were to change. A java porting of GNU getopts is also available but that is not so straightforward to use. So, this project is for providing a simple to use API for parsing the command line arguments. 
 
-Let's understand this through an example. Suppose, we are writing a utility which reads available log files and generates a statistics report for specified period of time. The end user can specify the **day**, **month**, **year** and **directories to search for log files** as command line arguments, in which **year** and **directories** are optional parameters. First, we create a Java class for containing the values specified by end user, something like this:
+## Summary
+This is simple and lightweight library for parsing an array of strings into specified class. For example, let's say we want to parse the command line arguments entered by end user and store the relevant values into a class, so that we can retrieve the values from the class and use them the way we need. Developers usually do it by checking the indices and convert values at certain index to certain variable, but this makes it a little bit cumbersome and fragile if the input pattern were to change. A java porting of GNU getopts is also available but that is not so straightforward to use. So, this project is for providing a simple to use API for parsing the command line arguments. 
+
+## Requirements
+
+ - Java 1.6 or above
+
+## How To Use
+Let's understand this through an example. Suppose, we are writing a utility which expects the end user to specify a set of directories and a time period. The end user can specify the `day`, `month`, year and `directoriesToSearch` as command line arguments, in which `year` and `directoriesToSearch` are optional parameters. First, we create a Java class for containing the values specified by end user, something like this:
 ```java
 package com.demo.argParse;
 
@@ -61,9 +68,6 @@ public class Main {
 	}
 }
 ```
-That's all we need to do, just specify the input pattern and data class, and get a new instance of data class with fields updated as per values available in the array of strings.
+That's all we need to do, just specify the input pattern and data class, and get a new instance of data class with fields updated as per values available in the array of strings. To use this library, add the JAR file available in [Releases](https://github.com/shekhar-himanshu/argument-parser-easy/releases) section to your classpath.
 
-There are some things which should be noted here:
-
- - List item
- - X
+Refer to javadoc for details on the API.
