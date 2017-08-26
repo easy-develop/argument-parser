@@ -4,6 +4,9 @@ target/
 # directory specific to netBeans project
 nbproject/
 
+# Sonar code analysis tool related directory
+.sonar/
+
 *.class
 
 # BlueJ files

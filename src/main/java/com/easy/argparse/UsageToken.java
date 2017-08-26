@@ -1,11 +1,13 @@
 package com.easy.argparse;
 
+import com.easy.argparse.util.Logger;
+import com.easy.argparse.util.StringsUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-//import java.util.Objects;
 
 final class UsageToken {
-
+    private static final Logger logger = Logger.getLogger(UsageToken.class);
+    
     private final String optionName;
     private final String optionAliasName;
     private final String dataVariableName;
@@ -32,9 +34,11 @@ final class UsageToken {
         try{
             return dataClass.getDeclaredField(dataVariableName);
         }catch(NoSuchFieldException e){
-            throw new IllegalArgumentException("Cannot find variable " + dataVariableName + " in calss " + dataClass.getCanonicalName() + 
+            logger.warn("Got exception while looking for field {} in the data class: {}", dataVariableName, e.getMessage());
+            throw new IllegalArgumentException("Cannot find variable " + dataVariableName + " in class " + dataClass.getCanonicalName() + 
                     " (" + e.getMessage() + ")");
         }catch(SecurityException e){
+            logger.warn("Got exception while accessing data class for fields: {}", e.getMessage());
             throw new IllegalArgumentException("Restricted to find variable " + dataVariableName + " in class " + dataClass.getCanonicalName() + 
                     " (" + e.getMessage() + ")");
         }
@@ -49,9 +53,11 @@ final class UsageToken {
                 setterMethod.setAccessible(true);
             }
         }catch(NoSuchMethodException  e){
+            logger.warn("Got exception looking for method in the data class: {}", e.getMessage());
             throw new IllegalArgumentException("Cannot find method " + setterMethodName + " in class " + dataClass.getCanonicalName() + 
                     " (" + e.getMessage() + ")");
         }catch(SecurityException e){
+            logger.warn("Got exception accessing method in data class: {}", e.getMessage());
             throw new IllegalArgumentException("Restricted to access method " + setterMethodName + " in class " + dataClass.getCanonicalName() + 
                     " (" + e.getMessage() + ")");
         }

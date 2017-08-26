@@ -146,7 +146,7 @@ public class ArgumentParser {
      * @param args The values representing command line arguments (or any String array for that sake)
      * @return A new instance of dataHolderClass specified in constructor with values available in {@code args} set appropriately
      */
-    synchronized public Object parse(String[] args){
+    public synchronized Object parse(String[] args){
         initializeAndValidate();
         
         fieldValueManager.updateAvailableValues(args);
@@ -154,30 +154,46 @@ public class ArgumentParser {
         if(usageTokenManager.isMissingMandatoryOption(fieldValueManager.getAvailableUsageTokens())){
             throw new IllegalArgumentException("Missing mandatory option from the arguments");
         }
+        Object dataHolderObject = getDataClassInstance();
+        
+        for (UsageToken usageToken : fieldValueManager.getAvailableUsageTokens()) {
+            invokeSetterMethod(usageToken, dataHolderObject);
+        }
+
+        return dataHolderObject;
+    }
+    
+    private Object getDataClassInstance(){
         Object dataHolderObject;
         try {
             dataHolderObject = dataClass.newInstance();
         } catch (InstantiationException e) {
+            logger.warn("Got exception while creating instance of data class: {}", e.getMessage());
             throw new IllegalArgumentException("Cannot create instance of " + dataClass.getCanonicalName() + " (" + e.getMessage() + ")");
         }catch(IllegalAccessException e){
+            logger.warn("Got exception while accessing data class for instantiation: {}", e.getMessage());
             throw new IllegalArgumentException("Cannot access " + dataClass.getCanonicalName() + " to create instance (" + e.getMessage() + ")");
         }
-        for (UsageToken usageToken : fieldValueManager.getAvailableUsageTokens()) {
-            Object argVal = fieldValueManager.getArgValueObject(usageToken);
-            Method setterMethod = usageTokenManager.getSetterMethod(usageToken);
-            logger.trace("Invoking setter method: {}", setterMethod.getName());
-            try {
-                setterMethod.invoke(dataHolderObject, argVal);
-            } catch (InvocationTargetException e) {
-                throw new IllegalArgumentException("Cannot invoke method " + dataClass.getCanonicalName() + "." + setterMethod.getName() + 
-                        " (" + e.getMessage() + ")");
-            }catch(IllegalAccessException e){
-                throw new IllegalArgumentException("Cannot access " + dataClass.getCanonicalName() + "." + setterMethod.getName() + 
-                        " (" + e.getMessage() + ")");
-            }
-        }
-
+        
         return dataHolderObject;
+    }
+    
+    private void invokeSetterMethod(UsageToken usageToken, Object dataClassInstance){
+        Method setterMethod = usageTokenManager.getSetterMethod(usageToken);
+        
+        logger.trace("Invoking setter method: {}", setterMethod.getName());
+        
+        try {
+            setterMethod.invoke(dataClassInstance, fieldValueManager.getArgValueObject(usageToken));
+        } catch (InvocationTargetException e) {
+            logger.warn("Got exception while invoking setter method: {}", e.getMessage());
+            throw new IllegalArgumentException("Cannot invoke method " + dataClass.getCanonicalName() + "." + setterMethod.getName()
+                    + " (" + e.getMessage() + ")");
+        } catch (IllegalAccessException e) {
+            logger.warn("Got exception while accessing data class for instantiation: {}", e.getMessage());
+            throw new IllegalArgumentException("Cannot access " + dataClass.getCanonicalName() + "." + setterMethod.getName()
+                    + " (" + e.getMessage() + ")");
+        }
     }
     
     private void initializeAndValidate(){

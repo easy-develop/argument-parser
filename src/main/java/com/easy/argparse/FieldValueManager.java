@@ -28,21 +28,9 @@ final class FieldValueManager {
         
         for (int index = 0; index < args.length; index++) {
             String option = args[index];
-            if (option.startsWith("-")) {
-                option = option.replaceAll("[-]{1,2}", "");
-                UsageToken usageToken = usageTokenManager.findUsageToken(option);
-                String value = "";
-                if (needsValue(usageToken)) {
-                    try {
-                        value = args[++index];
-                        if (value.startsWith("-")) {
-                            throw new IllegalArgumentException("No value specified for (" + usageToken.getDataVariableName() + ")");
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        throw new IllegalArgumentException("Value for option (" + option + ") could not found (" + e.getMessage() + ")");
-                    }
-                }
-                valueMap.put(usageToken, value);
+            if(option.startsWith("-")){
+                UsageToken usageToken = usageTokenManager.findUsageToken(option.replaceAll("[-]{1,2}", ""));
+                updateValueMap(usageToken, args, index);
             }
         }
     }
@@ -50,32 +38,31 @@ final class FieldValueManager {
     Set<UsageToken> getAvailableUsageTokens(){
         return valueMap.keySet();
     }
-
-    Map<UsageToken, String> getValueMap(String[] args) {
-        logger.trace("Obtaining the argument value map");
-        for (int index = 0; index < args.length; index++) {
-            String option = args[index];
-            if (option.startsWith("-")) {
-                option = option.replaceAll("[-]{1,2}", "");
-                UsageToken usageToken = usageTokenManager.findUsageToken(option);
-                String value = "";
-                if (needsValue(usageToken)) {
-                    try {
-                        value = args[++index];
-                        if (value.startsWith("-")) {
-                            throw new IllegalArgumentException("No value specified for (" + usageToken.getDataVariableName() + ")");
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        throw new IllegalArgumentException("Value for option (" + option + ") could not found (" + e.getMessage() + ")");
-                    }
-                }
-                valueMap.put(usageToken, value);
-            }
+    
+    private void updateValueMap(UsageToken usageToken, String[] args, int currentIndex){
+        String value = "";
+        if(needsValue(usageToken)){
+            value = getValue(args, currentIndex);
         }
-
-        return valueMap;
+        valueMap.put(usageToken, value);
     }
-
+    
+    private String getValue(String[] args, int currentIndex){
+        String value = "";
+        try{
+            value = args[currentIndex + 1];
+        }catch(ArrayIndexOutOfBoundsException e){
+            logger.warn("Got exception trying to get value at index {}: {}", currentIndex, e.getMessage());
+            throw new IllegalArgumentException("Missing value for option at index: " +  currentIndex);
+        }
+        
+        if(value.startsWith("-")){
+            throw new IllegalArgumentException("Missing value for option at index: " +  currentIndex);
+        }
+        
+        return value;
+    }
+    
     Object getArgValueObject(UsageToken usageToken) {
         String value = valueMap.get(usageToken);
         Object argValue;
