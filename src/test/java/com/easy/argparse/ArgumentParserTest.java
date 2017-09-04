@@ -1,6 +1,5 @@
 package com.easy.argparse;
 
-import com.easy.argparse.ArgumentParser;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
