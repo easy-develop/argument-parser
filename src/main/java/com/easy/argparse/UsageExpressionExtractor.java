@@ -7,12 +7,21 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This thread-safe class parses the usage expressions and extracts mandatory and optional expressions from it
+ * 
+ * @author himanshu_shekhar
+ */
 public class UsageExpressionExtractor {
     private static final Logger logger = LoggerFactory.getLogger(UsageExpressionExtractor.class);
     
     private final String usageExpression;
     private final List<IndexRange> optionalExpressionIndexRanges;
 
+    /**
+     * @param usageExpression The usage expression, e.g. {@code -m minute [-s seconds]}
+     * @throws IllegalArgumentException If specified usage expression is not valid
+     */
     UsageExpressionExtractor(String usageExpression) {
         this.usageExpression = usageExpression;
         this.optionalExpressionIndexRanges = Collections.unmodifiableList(getOptionalExpressionIndexRanges(usageExpression));
@@ -119,7 +128,7 @@ public class UsageExpressionExtractor {
      * @return part of the specified usage expression representing mandatory arguments
      * For example, if usage expression is <b>-f file [-t time] -d directory</b>, then <b>-f file -d directory</b> will be returned
      */
-    String getMandatoryExpression(){
+    public String getMandatoryExpression(){
         StringBuilder mandatoryExpression = new StringBuilder();
         for(int index=0; index < usageExpression.length(); index++){
             if(!isPartOfOptionalExpression(index, optionalExpressionIndexRanges)){
@@ -134,7 +143,7 @@ public class UsageExpressionExtractor {
      * @return part of the specified usage expression representing optional arguments
      * For example, if usage expression is <b>-f file [-t time] -d directory</b>, then <b>-t time</b> will be returned
      */
-    String getOptionalExpression(){
+    public String getOptionalExpression(){
         StringBuilder optionalExpression = new StringBuilder();
         for(IndexRange indexRange : optionalExpressionIndexRanges){
             optionalExpression.append(getOptionalExpressionPart(usageExpression, indexRange)).append(" ");

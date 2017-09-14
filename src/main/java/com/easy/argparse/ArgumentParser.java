@@ -6,104 +6,48 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class can be used for parsing the command line arguments (or any array of {@code String}s) into specified class <br>
- * For example, suppose we have a usage like {@code -m minute [-s seconds]}, then this class can be used to parse {@code minute and seconds} from <br>
- * the given array of {@code String}s and update the specified class representing these values <br>
- * <br>
- * As input, this class expects usage expression (like {@code -m minute [-s seconds]}), data class and array delimiter (optional) <br>
- * As output, it provides a new instance of data holding class with available values set appropriately <br><br>
- * 
- * Consider below things before using this library: <br>
- * <b><tt>Usage Expression Format</tt></b>
+ * This thread-safe class parses the command line arguments provided in form of an array of Strings and instantiates data class such that parsed values can
+ * be obtained from the created instance of data class <br>
+ * For example, consider below: <br>
+ * <b>Expected format: </b> {@code -m minute [-s seconds]} <br>
+ * <b>Command line arguments: </b> {@code -s 45 -m 20} <br>
+ * Then, created instance of data class can be used to obtain {@code 20} for minute and {@code 45} for seconds <br>
+ * Follow below rules to use this class: <br>
  * <ul>
- *    <li>
- *        Can contain mandatory as well as optional expressions
+ *    <li> 
+ *         Usage expression (like {@code -m minute [-s seconds]} can contain as many mandatory and optional expressions as required but optional
+ *         expressions cannot be nested
  *    </li>
  *    <li>
- *        Optional expressions must be within square bracket, example: {@code [-s seconds]}
+ *         Any other bracket (curly braces or round brackets) must not be present in usage format expression
  *    </li>
  *    <li>
- *        Nested square brackets are not allowed, example: {@code [-s seconds [-S milliseconds]]} is NOT allowed
+ *         A variable with name same as specified in usage expression must be present in the data class, along with corresponding setter method
  *    </li>
  *    <li>
- *        No other bracket other than square bracket is allowed, example: {@code (-m minute)} is NOT allowed
+ *         The data type of variable corresponding to name in usage expression must be either of below: <br>
+ *         <ol>
+ *            <li>String</li>
+ *            <li>Primitive data type ({@code boolean, byte, char, short, int, long, float, double})</li>
+ *            <li>Wrapper to primitive data type ({@code Boolean, Byte, Character, Short, Integer, Long, Float, Double})</li>
+ *            <li>An array of any of the above types</li>
+ *         </ol>
  *    </li>
  *    <li>
- *        An unmatched square bracket is illegal, example: {@code -m minute ] [-s seconds]} is NOT allowed
+ *         An optional alias can be defined. For example, {@code -m|--min minute} is a valid usage expression and {@code -m} or {@code --min} can be
+ *         used in corresponding command line arguments
  *    </li>
  *    <li>
- *       An alias to the argument switch can be specified separated by {@code |} character, example: {@code --sec|-s seconds}
+ *         The delimiter to identify different elements of an array can be any valid {@code String}
  *    </li>
  *    <li>
- *       Order in which values are provided is not relevant, example: {@code -m 20 -s 45} and {@code -s 45 -m 20} will give same results
+ *         Usage expression is case sensitive
  *    </li>
  *    <li>
- *       If an invalid usage expression is specified, {@code IllegalArgumentException} with appropriate message will be thrown
- *    </li>
- * </ul>
- * 
- * <br>
- * 
- * <b><tt>Data Class</tt></b>
- * <ul>
- *    <li>
- *       Must contain the variables specified in usage expression format, example: if usage is {@code -m minute [-s seconds]}, then data class
- *       must contain {@code minute} and {@code seconds} fields
+ *         All options except those corresponding to boolean type except a value to be specified in the command line arguments
  *    </li>
  *    <li>
- *       Allowed data types for the variables are:
- *       <ol>
- *          <li>
- *             Primitive data types: {@code boolean, byte, char, short, int, long, float, double}
- *          </li>
- *          <li>
- *             Wrapper to the primitive data types: {@code Boolean, Byte, Character, Short, Integer, Long, Float, Double}
- *          </li>
- *          <li>
- *             String
- *          </li>
- *          <li>
- *             Array of any of the above data types
- *          </li>
- *       </ol>
- *    <li>
- *       Must contain setter method for variables specified in usage expression with appropriate argument, example: if we have {@code int minute} as
- *       field, then we must have {@code setMinute(int)} method in the data class
- *    </li>
- *    <li>
- *       The default constructor must be accessible
- *    </li>
- * </ul>
- * 
- * <br>
- * 
- * <b><tt>Array Delimiter</tt></b>
- * <ul>
- *    <li>
- *       Any string
- *    </li>
- * </ul>
- * 
- * <br>
- * <b><tt>Input data</tt></b>
- * <ul>
- *    <li>
- *       The input data must be an array of {@code String} values conforming to the specified usage expression, example: for usage expression
- *       {@code --min|-m minute [--verbose|-v verbose]} with data class having fields {@code int minute, int seconds,
- *       boolean verbose}, below input data values are valid: <br>
- *       {@code --min 23} <br>
- *       {@code -m 23 --verbose} <br>
- *       {@code -m 23 -v} <br>
- *       It is to note that every option except that for boolean (verbose in our example is boolean) needs to have a corresponding value
- *    </li>
- *    <li>
- *       All the mandatory option (and corresponding value, if applicable) must be present
- *    </li>
- *    <li>
- *       Value for an option must be in proper format
- *    </li>
- *    <li>
- *       An {@code IllegalArgumentException} with appropriate error message is thrown if anything wrong is found with the input data
+ *         If anything is wrong, e.g. usage expression is not valid etc., then an IllegalArgumentException with appropriate message will be thrown
  *    </li>
  * </ul>
  * 

@@ -11,6 +11,11 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This thread-safe class extracts and manages the mandatory and optional usage tokens from given usage expression
+ * 
+ * @author himanshu_shekhar
+ */
 public class UsageTokenManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UsageTokenManager.class);
@@ -42,7 +47,12 @@ public class UsageTokenManager {
     private List<UsageToken> mandatoryUsageTokens;
     private List<UsageToken> optionalUsageTokens;
 
-    UsageTokenManager(String usageExpression, Class<?> dataClass) {
+    /**
+     * 
+     * @param usageExpression The usage expression for the input format of command line arguments
+     * @param dataClass The data class which will keep the values available in command line arguments
+     */
+    public UsageTokenManager(String usageExpression, Class<?> dataClass) {
         this.usageExpression = usageExpression;
         this.dataClass = dataClass;
         this.setterMethodMap = new ConcurrentHashMap<UsageToken, Method>();
@@ -50,7 +60,10 @@ public class UsageTokenManager {
         this.optionalUsageTokens = new ArrayList<UsageToken>();
     }
 
-    synchronized void initialize() {
+    /**
+     * Initialize and update the data structures representing mandatory and optional usage tokens
+     */
+    public synchronized void initialize() {
         reset();
         
         UsageExpressionExtractor usageExpressionExtractor = new UsageExpressionExtractor(usageExpression);
@@ -76,13 +89,22 @@ public class UsageTokenManager {
         }
     }
 
-    synchronized void validateVariableNames() {
+    /**
+     * Validate the data class for mandatory and optional usage tokens
+     * @throws IllegalArgumentException If data class is not valid
+     */
+    public synchronized void validateVariableNames() {
         DataClassValidator dataClassValidator = new DataClassValidator(dataClass);
         dataClassValidator.validateVariableNames(mandatoryUsageTokens);
         dataClassValidator.validateVariableNames(optionalUsageTokens);
     }
 
-    synchronized boolean isMissingMandatoryOption(Set<UsageToken> availableUsageTokens) {
+    /**
+     * 
+     * @param availableUsageTokens Set of usage options as available in the command line arguments
+     * @return If any of the mandatory options is missing
+     */
+    public synchronized boolean isMissingMandatoryOption(Set<UsageToken> availableUsageTokens) {
         boolean missing = false;
         for (UsageToken usageToken : mandatoryUsageTokens) {
             if (!availableUsageTokens.contains(usageToken)) {
@@ -94,7 +116,13 @@ public class UsageTokenManager {
         return missing;
     }
 
-    synchronized UsageToken findUsageToken(String option) {
+    /**
+     * 
+     * @param option The option as present in the usage expression, e.g. {@code m} in usage expression {@code -m minute [-s seconds]} is an option
+     * @return Corresponding usage token
+     * @throws IllegalArgumentException If corresponding usage token could not be found
+     */
+    public synchronized UsageToken findUsageToken(String option) {
         UsageToken foundUsageToken = findUsageToken(option, mandatoryUsageTokens);
         if (foundUsageToken == null) {
             foundUsageToken = findUsageToken(option, optionalUsageTokens);
@@ -105,7 +133,11 @@ public class UsageTokenManager {
         return foundUsageToken;
     }
 
-    synchronized boolean noTokensAvailable() {
+    /**
+     * 
+     * @return If no valid usage tokens could be found in the given usage expression
+     */
+    public synchronized boolean noTokensAvailable() {
         return mandatoryUsageTokens.isEmpty() && optionalUsageTokens.isEmpty();
     }
 
@@ -121,7 +153,12 @@ public class UsageTokenManager {
         return foundUsageToken;
     }
 
-    Method getSetterMethod(UsageToken usageToken) {
+    /**
+     * 
+     * @param usageToken The usage token corresponding to the option
+     * @return The setter method in specified data class corresponding to given usage token
+     */
+    public Method getSetterMethod(UsageToken usageToken) {
         return setterMethodMap.get(usageToken);
     }
 }

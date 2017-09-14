@@ -8,6 +8,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This thread safe class parses the command line arguments (as an array of {@code String}) and updates the data class
+ * with available values
+ * 
+ * @author himanshu_shekhar
+ */
 public class FieldValueManager {
 
     private static final Logger logger = LoggerFactory.getLogger(FieldValueManager.class);
@@ -17,14 +23,25 @@ public class FieldValueManager {
     private final String arrayDelimiter;
     private final Map<UsageToken, String> valueMap;
 
-    FieldValueManager(Class<?> dataClass, UsageTokenManager usageTokenManager, String arrayDelimiter) {
+    /**
+     * 
+     * @param dataClass The data class whose instance will keep the available values
+     * @param usageTokenManager Instance which provides usage tokens corresponding to usage expression
+     * @param arrayDelimiter The delimiter used to separate elements in array
+     */
+    public FieldValueManager(Class<?> dataClass, UsageTokenManager usageTokenManager, String arrayDelimiter) {
         this.dataClass = dataClass;
         this.usageTokenManager = usageTokenManager;
         this.arrayDelimiter = arrayDelimiter;
         this.valueMap = new ConcurrentHashMap<UsageToken, String>();
     }
 
-    void updateAvailableValues(String[] args) {
+    /**
+     * Parse available values and keep a map of values available for corresponding option in usage
+     * 
+     * @param args Array of {@code String} corresponding to command line arguments
+     */
+    public void updateAvailableValues(String[] args) {
         logger.trace("Parsing the arguments for values");
         
         for (int index = 0; index < args.length; index++) {
@@ -36,7 +53,11 @@ public class FieldValueManager {
         }
     }
     
-    Set<UsageToken> getAvailableUsageTokens(){
+    /**
+     * 
+     * @return A set of usage tokens for which values are available in the command line argument
+     */
+    public Set<UsageToken> getAvailableUsageTokens(){
         return valueMap.keySet();
     }
     
@@ -64,7 +85,12 @@ public class FieldValueManager {
         return value;
     }
     
-    Object getArgValueObject(UsageToken usageToken) {
+    /**
+     * 
+     * @param usageToken The usage token corresponding to an option in the usage expression
+     * @return The value available in command line argument
+     */
+    public Object getArgValueObject(UsageToken usageToken) {
         String value = valueMap.get(usageToken);
         Object argValue;
         if (needsValue(usageToken)) {
