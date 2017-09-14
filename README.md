@@ -5,7 +5,7 @@ This is simple and lightweight library for parsing an array of strings into spec
 
 ## Requirements
 
- - Java 1.6 or above
+ - Java 1.5 or above
 
 ## How To Use
 Let's understand this through an example. Suppose, we are writing a utility which expects the end user to specify a set of directories and a time period. The end user can specify the `day`, `month`, year and `directoriesToSearch` as command line arguments, in which `year` and `directoriesToSearch` are optional parameters. First, we create a Java class for containing the values specified by end user, something like this:

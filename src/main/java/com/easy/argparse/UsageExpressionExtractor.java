@@ -1,13 +1,14 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
-import com.easy.argparse.util.StringsUtil;
+import com.easy.core.utils.StringsUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-final class UsageExpressionExtractor {
-    private static final Logger logger = Logger.getLogger(UsageExpressionExtractor.class);
+public class UsageExpressionExtractor {
+    private static final Logger logger = LoggerFactory.getLogger(UsageExpressionExtractor.class);
     
     private final String usageExpression;
     private final List<IndexRange> optionalExpressionIndexRanges;

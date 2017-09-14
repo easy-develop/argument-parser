@@ -1,12 +1,12 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
-import com.easy.argparse.util.StringsUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-final class UsageToken {
-    private static final Logger logger = Logger.getLogger(UsageToken.class);
+public class UsageToken {
+    private static final Logger logger = LoggerFactory.getLogger(UsageToken.class);
     
     private final String optionName;
     private final String optionAliasName;

@@ -1,15 +1,16 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
-import com.easy.argparse.util.RegexUtil;
+import com.easy.core.utils.RegexUtil;
 import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-final class FieldValueManager {
+public class FieldValueManager {
 
-    private static final Logger logger = Logger.getLogger(FieldValueManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(FieldValueManager.class);
 
     private final Class<?> dataClass;
     private final UsageTokenManager usageTokenManager;

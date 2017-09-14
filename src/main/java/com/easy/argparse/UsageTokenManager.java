@@ -1,6 +1,5 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +8,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-final class UsageTokenManager {
+public class UsageTokenManager {
 
-    private static final Logger logger = Logger.getLogger(UsageTokenManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsageTokenManager.class);
 
     private static List<UsageToken> getUsageTokens(String usageExpression) {
         // example: --day|-d DAY -time | -t TIME -f FILE

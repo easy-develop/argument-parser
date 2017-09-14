@@ -1,14 +1,16 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-final class DataClassValidator {
-    private static final Logger logger = Logger.getLogger(DataClassValidator.class);
+public class DataClassValidator {
+    private static final Logger logger = LoggerFactory.getLogger(DataClassValidator.class);
+    
     private static final Set<Class<?>> ALLOWED_NON_PRIMITIVE_FIELD_TYPES = new HashSet<Class<?>>(Arrays.asList(new Class<?>[]
     {
         String.class,

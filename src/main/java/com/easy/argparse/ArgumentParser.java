@@ -1,8 +1,9 @@
 package com.easy.argparse;
 
-import com.easy.argparse.util.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class can be used for parsing the command line arguments (or any array of {@code String}s) into specified class <br>
@@ -109,7 +110,7 @@ import java.lang.reflect.Method;
  * @author himanshu_shekhar
  */
 public class ArgumentParser {
-    private static final Logger logger = Logger.getLogger(ArgumentParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(ArgumentParser.class);
     
     private final Class<?> dataClass;
     private final UsageTokenManager usageTokenManager;
