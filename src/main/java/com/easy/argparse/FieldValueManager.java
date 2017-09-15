@@ -74,7 +74,7 @@ public class FieldValueManager {
         try{
             value = args[currentIndex + 1];
         }catch(ArrayIndexOutOfBoundsException e){
-            logger.warn("Got exception trying to get value at index {}: {}", currentIndex, e.getMessage());
+            logger.warn("Got exception trying to get value at index {}: {}", currentIndex, e);
             throw new IllegalArgumentException("Missing value for option at index: " +  currentIndex);
         }
         

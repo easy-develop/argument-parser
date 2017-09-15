@@ -54,11 +54,11 @@ public class DataClassValidator {
                 logger.trace("Found variable {} in the data class", variableName);
                 validateFieldType(field.getType());
             }catch(NoSuchFieldException e){
-                logger.warn("Got exception while looking for field in data class: {}", e.getMessage());
+                logger.warn("Got exception while looking for field in data class: {}", e);
                 throw new IllegalArgumentException("Field " + variableName + " not present in class " + dataClass.getCanonicalName() + 
                         " (" + e.getMessage() + ")");
             }catch(SecurityException e){
-                logger.warn("Got exception while accessing data class for fields: {}", e.getMessage());
+                logger.warn("Got exception while accessing data class for fields: {}", e);
                 throw new IllegalArgumentException("Restricted to access field " + variableName + " in class " + dataClass.getCanonicalName() + 
                         " (" + e.getMessage() + ")");
             }

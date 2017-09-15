@@ -19,6 +19,26 @@ import org.slf4j.LoggerFactory;
 public class UsageTokenManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UsageTokenManager.class);
+    
+    private final String usageExpression;
+    private final Class<?> dataClass;
+    private final Map<UsageToken, Method> setterMethodMap;
+
+    private List<UsageToken> mandatoryUsageTokens;
+    private List<UsageToken> optionalUsageTokens;
+
+    /**
+     * 
+     * @param usageExpression The usage expression for the input format of command line arguments
+     * @param dataClass The data class which will keep the values available in command line arguments
+     */
+    public UsageTokenManager(String usageExpression, Class<?> dataClass) {
+        this.usageExpression = usageExpression;
+        this.dataClass = dataClass;
+        this.setterMethodMap = new ConcurrentHashMap<UsageToken, Method>();
+        this.mandatoryUsageTokens = new ArrayList<UsageToken>();
+        this.optionalUsageTokens = new ArrayList<UsageToken>();
+    }
 
     private static List<UsageToken> getUsageTokens(String usageExpression) {
         // example: --day|-d DAY -time | -t TIME -f FILE
@@ -38,26 +58,6 @@ public class UsageTokenManager {
         }
 
         return usageTokens;
-    }
-
-    private final String usageExpression;
-    private final Class<?> dataClass;
-    private final Map<UsageToken, Method> setterMethodMap;
-
-    private List<UsageToken> mandatoryUsageTokens;
-    private List<UsageToken> optionalUsageTokens;
-
-    /**
-     * 
-     * @param usageExpression The usage expression for the input format of command line arguments
-     * @param dataClass The data class which will keep the values available in command line arguments
-     */
-    public UsageTokenManager(String usageExpression, Class<?> dataClass) {
-        this.usageExpression = usageExpression;
-        this.dataClass = dataClass;
-        this.setterMethodMap = new ConcurrentHashMap<UsageToken, Method>();
-        this.mandatoryUsageTokens = new ArrayList<UsageToken>();
-        this.optionalUsageTokens = new ArrayList<UsageToken>();
     }
 
     /**

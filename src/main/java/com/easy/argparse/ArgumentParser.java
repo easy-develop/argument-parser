@@ -113,10 +113,10 @@ public class ArgumentParser {
         try {
             dataHolderObject = dataClass.newInstance();
         } catch (InstantiationException e) {
-            logger.warn("Got exception while creating instance of data class: {}", e.getMessage());
+            logger.warn("Got exception while creating instance of data class: {}", e);
             throw new IllegalArgumentException("Cannot create instance of " + dataClass.getCanonicalName() + " (" + e.getMessage() + ")");
         }catch(IllegalAccessException e){
-            logger.warn("Got exception while accessing data class for instantiation: {}", e.getMessage());
+            logger.warn("Got exception while accessing data class for instantiation: {}", e);
             throw new IllegalArgumentException("Cannot access " + dataClass.getCanonicalName() + " to create instance (" + e.getMessage() + ")");
         }
         
@@ -131,11 +131,11 @@ public class ArgumentParser {
         try {
             setterMethod.invoke(dataClassInstance, fieldValueManager.getArgValueObject(usageToken));
         } catch (InvocationTargetException e) {
-            logger.warn("Got exception while invoking setter method: {}", e.getMessage());
+            logger.warn("Got exception while invoking setter method: {}", e);
             throw new IllegalArgumentException("Cannot invoke method " + dataClass.getCanonicalName() + "." + setterMethod.getName()
                     + " (" + e.getMessage() + ")");
         } catch (IllegalAccessException e) {
-            logger.warn("Got exception while accessing data class for instantiation: {}", e.getMessage());
+            logger.warn("Got exception while accessing data class for instantiation: {}", e);
             throw new IllegalArgumentException("Cannot access " + dataClass.getCanonicalName() + "." + setterMethod.getName()
                     + " (" + e.getMessage() + ")");
         }
