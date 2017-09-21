@@ -2,6 +2,7 @@ package com.easy.argparse;
 
 import com.easy.core.utils.RegexUtil;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,8 +95,11 @@ public class FieldValueManager {
         String value = valueMap.get(usageToken);
         Object argValue;
         if (needsValue(usageToken)) {
-            Class<?> fieldType = usageToken.getMappedField(dataClass).getType();
-            if (fieldType.isArray()) {
+            Field field = usageToken.getMappedField(dataClass);
+            Class<?> fieldType = field.getType();
+            if (fieldType.isEnum()) {
+                argValue = Enum.valueOf((Class<Enum>)fieldType, value);
+            } else if (fieldType.isArray()) {
                 argValue = getArrayArgValue(value, fieldType);
             } else {
                 argValue = getNonArrayArgValue(value, fieldType);

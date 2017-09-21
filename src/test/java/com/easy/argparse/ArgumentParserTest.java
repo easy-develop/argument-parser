@@ -5,6 +5,15 @@ import org.junit.Test;
 
 public class ArgumentParserTest {
     
+    @Test
+    public void parsesEnumInArgument(){
+        String usage = "-n name -p priority";
+        ArgumentParser tester = new ArgumentParser(usage, ArgumentDataWithEnum.class);
+        ArgumentDataWithEnum data = (ArgumentDataWithEnum) tester.parse(new String[]{"-n", "Test", "-p", "MEDIUM"});
+        assertEquals("Cannot parse string when enum in arguments", "Test", data.getName());
+        assertEquals("Cannot parse enum in arguments", Priority.MEDIUM, data.getPriority());
+    }
+    
     @Test(expected = IllegalArgumentException.class)
     public void illegalArgumentIsThrownIfEmptyUsageExpression(){
         ArgumentParser tester = new ArgumentParser("", ArgumentDataEmpty.class);

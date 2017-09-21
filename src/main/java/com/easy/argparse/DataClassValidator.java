@@ -69,7 +69,7 @@ public class DataClassValidator {
         logger.trace("Checking validity of field type: {}", fieldType.getCanonicalName());
         if(fieldType.isArray()){
             validateFieldType(fieldType.getComponentType());
-        }else if(!fieldType.isPrimitive() && !ALLOWED_NON_PRIMITIVE_FIELD_TYPES.contains(fieldType)){
+        }else if(!fieldType.isPrimitive() && !ALLOWED_NON_PRIMITIVE_FIELD_TYPES.contains(fieldType) && !fieldType.isEnum()){
             throw new IllegalArgumentException("Field type " + fieldType.getCanonicalName() + " is not allowed");
         }
     }
