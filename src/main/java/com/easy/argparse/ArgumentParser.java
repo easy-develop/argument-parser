@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  *            <li>Primitive data type ({@code boolean, byte, char, short, int, long, float, double})</li>
  *            <li>Wrapper to primitive data type ({@code Boolean, Byte, Character, Short, Integer, Long, Float, Double})</li>
  *            <li>An array of any of the above types</li>
+ *            <li>Enum class</li>
  *         </ol>
  *    </li>
  *    <li>
